@@ -1,4 +1,4 @@
 pandas
 ipython
-openpypl
+openpyxl
 pyarrow
