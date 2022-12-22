@@ -66,7 +66,7 @@ def vgeral_txt_xlsx(dir):
         df['MES_NUM'] = int(mes_ano_str[:-4])
         df['UG'] = df['Orgao'] + df['Unidade'].str.zfill(2)
         df.drop(['Conta', 'Orgao', 'Unidade'], axis=1, inplace=True)
-        df['arquivo'] = 'P-PURA'
+        df[['ATRIBUTO1', 'ATRIBUTO2']] = 'P-PURA'
         dfs.append(df)
 
     df = pd.concat(dfs)
@@ -105,9 +105,10 @@ def saldo_txt_para_xlsx(dir):
             dtype={'UNIDADE ORÇAMENTÁRIA': 'O'},
         )
 
-        df_saldo = df_saldo.assign(arquivo='F-PURA')
+        df_saldo[['ATRIBUTO1', 'ATRIBUTO2']] = 'F-PURA'
         if 'FinPerm' in saldo_txt:
-            df_saldo = df_saldo.assign(arquivo='MISTA')
+            df_saldo['ATRIBUTO1'] = 'MISTA'
+            df_saldo['ATRIBUTO2'] = 'MISTA - ' + df_saldo['INFORMAÇÃO COMPLEMENTAR'].str[-1]
 
         dfs.append(df_saldo)
 
@@ -130,8 +131,8 @@ if __name__ == '__main__':
     df_vgeral = vgeral_txt_xlsx(visao_geral_dir)
     df_vgeral.query('CONTA != @contas_saldo', inplace=True)
 
-    vgeral_cols = ['Ano', 'CONTA', 'INFORMAÇÃO COMPLEMENTAR', 'Saldo Mês Anterior', 'Movimento Débito no mês', 'Movimento Crédito no mês', 'Saldo Atual', 'Natureza', 'arquivo', 'MES_NUM', 'UG']
-    saldos_cols = ['ANO', 'CONTA', 'INFORMAÇÃO COMPLEMENTAR', 'SALDO INICIAL', 'MOV DÉBITO', 'MOV CRÉDITO', 'SALDO FINAL', 'NATUREZA FINAL', 'arquivo', 'MES_NUM', 'UG']
+    vgeral_cols = ['Ano', 'CONTA', 'INFORMAÇÃO COMPLEMENTAR', 'Saldo Mês Anterior', 'Movimento Débito no mês', 'Movimento Crédito no mês', 'Saldo Atual', 'Natureza', 'ATRIBUTO1', 'ATRIBUTO2', 'MES_NUM', 'UG']
+    saldos_cols = ['ANO', 'CONTA', 'INFORMAÇÃO COMPLEMENTAR', 'SALDO INICIAL', 'MOV DÉBITO', 'MOV CRÉDITO', 'SALDO FINAL', 'NATUREZA FINAL', 'ATRIBUTO1', 'ATRIBUTO2', 'MES_NUM', 'UG']
     df_vgeral = df_vgeral[vgeral_cols]
     df_vgeral.columns = saldos_cols
 
@@ -144,7 +145,8 @@ if __name__ == '__main__':
         'UG',
         'CONTA',
         'NATUREZA FINAL',
-        'arquivo',
+        'ATRIBUTO1', 
+        'ATRIBUTO2'
     ]
 
     df[cols_categ] = df[cols_categ].astype('category')
