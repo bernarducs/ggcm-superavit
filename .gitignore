@@ -3,3 +3,5 @@ src/datasets/**/*.txt
 src/datasets/**/*.pdf
 src/datasets/**/*.zip
 src/datasets/**/*.xlsx
+
+__pycache__/
