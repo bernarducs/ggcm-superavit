@@ -2,6 +2,12 @@
 
 Este módulo retorna dataframe relativo a visão geral que servirá
 de base para contas do tipo p-pura.
+
+    FORMATO DO ARQUIVO
++- 64 arquivos por mês do último mês de referência
+_balanceteVerificacaoMensal_MMAAAA_OrgaoXXXX.txt onde XXXX é cód da UG
+a ser classificada como P-PURA
+
 """
 
 import os

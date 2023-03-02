@@ -2,6 +2,12 @@
 
 Este módulo retorna dataframe relativo aos saldos mensais que servirão
 de base para contas do tipo f-pura e mista.
+
+    FORMATO DO ARQUIVO
+Dois arquivos por mês
+AAAA_M_01.01_AcompSaldoMensal.txt a ser classificada como F-PURA
+AAAA_M_AcompSaldoMensalFinPerm.txt a ser classificada como MISTA
+
 """
 
 import os
