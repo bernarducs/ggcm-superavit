@@ -28,36 +28,44 @@ MESES = {
     'Novembro': 11,
     'Dezembro': 12,
 }
+USE_COLS = [
+    'UNIDADE ORÇAMENTÁRIA',
+    'ANO',
+    'MÊS',
+    'CONTA',
+    'INFORMAÇÃO COMPLEMENTAR',
+    'SALDO INICIAL',
+    # 'NATUREZA INICIAL',
+    'MOV DÉBITO',
+    'MOV CRÉDITO',
+    'SALDO FINAL',
+    'NATUREZA FINAL',
+]
 
-
-def tab_saldo_txt_para_xlsx(dir) -> pd.DataFrame:
-    cols_saldo_ini = [
-        'UNIDADE ORÇAMENTÁRIA',
-        'ANO',
-        'MÊS',
-        'CONTA',
-        'INFORMAÇÃO COMPLEMENTAR',
-        'SALDO INICIAL',
-        # 'NATUREZA INICIAL',
-        'MOV DÉBITO',
-        'MOV CRÉDITO',
-        'SALDO FINAL',
-        'NATUREZA FINAL',
-    ]
-
-    saldo_txts = [f for f in os.listdir(dir) if f.endswith('.txt')]
-    dfs = list()
-    for saldo_txt in saldo_txts:
-
-        df_saldo = pd.read_csv(
+def importa_csv(dir, saldo_txt, encoding='latin-1'):
+    try:
+        df = pd.read_csv(
             f'{dir}/{saldo_txt}',
             sep=';',
-            encoding='latin-1',
-            usecols=cols_saldo_ini,
+            encoding=encoding,
+            usecols=USE_COLS,
             decimal=',',
             thousands='.',
             dtype={'UNIDADE ORÇAMENTÁRIA': 'O'},
         )
+    except ValueError:
+        df = importa_csv(dir, saldo_txt, 'utf-8')
+
+    return df
+    
+
+def tab_saldo_txt_para_xlsx(dir) -> pd.DataFrame:
+    saldo_txts = [f for f in os.listdir(dir) if f.endswith('.txt')]
+
+    dfs = list()
+    for saldo_txt in saldo_txts:
+        # print(f'importando {saldo_txt} para tabela de Saldo Mensal...')
+        df_saldo = importa_csv(dir, saldo_txt)
 
         df_saldo[['ATRIBUTO1', 'ATRIBUTO2']] = 'F-PURA'
         if 'FinPerm' in saldo_txt:
